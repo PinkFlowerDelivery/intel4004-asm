@@ -2,7 +2,6 @@
 
 #include "tokens.h"
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 class Lexer {
@@ -12,5 +11,4 @@ class Lexer {
 public:
   Lexer(std::string &rawCode) : rawCode_(rawCode) {};
   std::vector<Asm4004::Token> tokenize();
-  void rawIdentiferToTokenType();
 };

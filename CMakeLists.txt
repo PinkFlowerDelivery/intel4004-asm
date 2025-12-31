@@ -14,6 +14,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(fmt)
 
-add_executable(main src/main.cpp src/lexer.cpp src/tokens.cpp)
+add_executable(main src/main.cpp src/lexer.cpp src/tokens.cpp src/parser.cpp)
 
 target_link_libraries(main fmt::fmt)

@@ -9,7 +9,6 @@
 std::vector<Asm4004::Token> Lexer::tokenize() {
   uint32_t line = 0;
   std::string buffer;
-  bool isInt = false;
 
   for (ssize_t i = 0; i < rawCode_.size(); i++) {
     switch (rawCode_[i]) {
@@ -28,7 +27,7 @@ std::vector<Asm4004::Token> Lexer::tokenize() {
 
     default:
 
-      if (std::isalpha(rawCode_[i])) {
+      if (std::isalpha(rawCode_[i]) || std::isdigit(rawCode_[i])) {
         while (std::isalpha(rawCode_[i]) || std::isdigit(rawCode_[i])) {
           buffer.push_back(rawCode_[i]);
           i++;
@@ -71,8 +70,4 @@ std::vector<Asm4004::Token> Lexer::tokenize() {
   }
 
   return lexemBuffer_;
-};
-
-void Lexer::rawIdentiferToTokenType() {
-
 };
