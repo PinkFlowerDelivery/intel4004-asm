@@ -12,8 +12,23 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/fmtlib/fmt
   GIT_TAG        12.1.0)
 
-FetchContent_MakeAvailable(fmt)
-
 add_executable(main src/main.cpp src/lexer.cpp src/tokens.cpp src/parser.cpp)
-
 target_link_libraries(main fmt::fmt)
+
+# Tests
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+
+FetchContent_MakeAvailable(fmt googletest)
+enable_testing()
+
+add_executable(lexer_tests tests/lexer/ident_test.cpp src/lexer.cpp src/tokens.cpp)
+
+target_include_directories(lexer_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(lexer_tests GTest::gtest_main fmt::fmt)
+
+include(GoogleTest)
+
+gtest_discover_tests(lexer_tests)

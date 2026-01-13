@@ -109,8 +109,6 @@ void Lexer::parseIdentOrLabel()
 
 void Lexer::skipComment()
 {
-    lexemBuffer_.emplace_back(Asm4004::Semicolon{});
-
     while (rawCode_[i_] != '\n')
     {
         i_++;

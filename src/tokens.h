@@ -1,54 +1,47 @@
 #pragma once
+
 #include <cstdint>
 #include <string>
-#include <unordered_map>
 #include <variant>
-namespace Asm4004 {
 
-enum class TokenType {
-  R0,
-  R1,
-  R2,
-  R3,
-  R4,
-  R5,
-  R6,
-  R7,
-  R8,
-  R9,
-  R10,
-  R11,
-  R12,
-  R13,
-  R14,
-  R15,
+namespace Asm4004
+{
 
-  // Instructions
-  NOP,
-  JUN,
-  DEC,
-  ADD,
-  SUB,
-  LD,
-  XCH,
-  LDM,
-  CLC,
-  STC
+struct Identifier
+{
+    std::string name;
+    bool operator==(const Identifier& other) const
+    {
+        return name == other.name;
+    };
+};
+struct Integer
+{
+    int32_t value;
+    bool operator==(const Integer& other) const
+    {
+        return value == other.value;
+    };
 };
 
-extern std::unordered_map<std::string, TokenType> mapOfTokens;
-
-struct Identifier {
-  TokenType name;
+struct HexadecimialInteger
+{
+    int32_t value;
+    bool operator==(const Integer& other) const
+    {
+        return value == other.value;
+    };
 };
 
-struct Comma {};
-struct Colon {};
-struct Semicolon {};
-struct Integer {
-  uint8_t value;
+struct Label
+{
+    std::string name;
 };
 
-using Token = std::variant<Identifier, Comma, Colon, Integer, Semicolon>;
+struct Comma
+{
+};
+
+using Token = std::variant<Identifier, Comma, Integer, HexadecimialInteger, Label>;
 
 } // namespace Asm4004
