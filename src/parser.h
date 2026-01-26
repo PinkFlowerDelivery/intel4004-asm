@@ -8,29 +8,21 @@
 #include <unordered_map>
 #include <vector>
 
-struct Instruction
-{
+struct Instruction {
     std::array<uint8_t, 2> value = {0};
     std::string opcode;
 };
 
-enum OperandType
-{
-    NONE,
-    INTEGER,
-    REGISTER,
-    LABEL
-};
-struct InstructionMeta
-{
+enum OperandType { INTEGER, REGISTER, LABEL };
+struct InstructionMeta {
     uint8_t operandCount;
     std::array<OperandType, 2> operandTypes;
+    uint8_t byteSize;
 };
 
 extern std::unordered_map<std::string, InstructionMeta> mapOfInstuctionMeta;
 
-class Parser
-{
+class Parser {
   public:
     std::vector<Asm4004::Token> lexems_;
     std::vector<Instruction> instructions_;
@@ -40,7 +32,7 @@ class Parser
     void parseInstruction(size_t& i);
     void parseInstructionArgs(size_t& i, Instruction& rawInstruction,
                               InstructionMeta& instructionMeta);
-    void parseLabel(size_t& i);
+    void collectLabels();
 
   public:
     Parser(std::vector<Asm4004::Token>& lexems) : lexems_(lexems) {};

@@ -4,43 +4,33 @@
 #include <string>
 #include <variant>
 
-namespace Asm4004
-{
+namespace Asm4004 {
 
-struct Identifier
-{
+struct Identifier {
     std::string name;
-    bool operator==(const Identifier& other) const
-    {
+    bool operator==(const Identifier& other) const {
         return name == other.name;
     };
 };
-struct Integer
-{
+struct Integer {
     int32_t value;
-    bool operator==(const Integer& other) const
-    {
+    bool operator==(const Integer& other) const {
         return value == other.value;
     };
 };
 
-struct HexadecimialInteger
-{
+struct HexadecimialInteger {
     int32_t value;
-    bool operator==(const Integer& other) const
-    {
+    bool operator==(const Integer& other) const {
         return value == other.value;
     };
 };
 
-struct Label
-{
+struct Label {
     std::string name;
 };
 
-struct Comma
-{
-};
+struct Comma {};
 
 using Token = std::variant<Identifier, Comma, Integer, HexadecimialInteger, Label>;
 

@@ -1,9 +1,8 @@
-BasedOnStyle: LLVM
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 ColumnLimit: 100
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Attach
 PointerAlignment: Left
 AllowShortFunctionsOnASingleLine: Empty
 SpaceAfterTemplateKeyword: true

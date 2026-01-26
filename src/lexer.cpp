@@ -6,15 +6,12 @@
 #include <string>
 #include <sys/types.h>
 
-std::vector<Asm4004::Token> Lexer::tokenize()
-{
+std::vector<Asm4004::Token> Lexer::tokenize() {
     uint32_t line = 1;
     std::string buffer;
 
-    while (i_ < rawCode_.size())
-    {
-        switch (rawCode_[i_])
-        {
+    while (i_ < rawCode_.size()) {
+        switch (rawCode_[i_]) {
         case ' ':
         case '\r':
         case '\t':
@@ -35,20 +32,17 @@ std::vector<Asm4004::Token> Lexer::tokenize()
 
         default:
 
-            if (i_ <= rawCode_.size() && rawCode_[i_] == '0' && rawCode_[i_ + 1] == 'x')
-            {
+            if (i_ <= rawCode_.size() && rawCode_[i_] == '0' && rawCode_[i_ + 1] == 'x') {
                 parseHex();
                 continue;
             }
 
-            if (std::isdigit(rawCode_[i_]))
-            {
+            if (std::isdigit(rawCode_[i_])) {
                 parseInteger();
                 continue;
             }
 
-            if (std::isalpha(rawCode_[i_]))
-            {
+            if (std::isalpha(rawCode_[i_])) {
                 parseIdentOrLabel();
                 continue;
             }
@@ -61,56 +55,45 @@ std::vector<Asm4004::Token> Lexer::tokenize()
     return lexemBuffer_;
 };
 
-void Lexer::parseHex()
-{
+void Lexer::parseHex() {
     std::string buffer;
 
     i_ += 2; // Skip '0x'
 
-    while (i_ < rawCode_.size() && std::isxdigit(rawCode_[i_]))
-    {
+    while (i_ < rawCode_.size() && std::isxdigit(rawCode_[i_])) {
         buffer.push_back(rawCode_[i_++]);
     }
 
     lexemBuffer_.emplace_back(Asm4004::HexadecimialInteger{std::stoi(buffer, nullptr, 16)});
 };
 
-void Lexer::parseInteger()
-{
+void Lexer::parseInteger() {
     std::string buffer;
-    while (i_ < rawCode_.size() && std::isdigit(rawCode_[i_]))
-    {
+    while (i_ < rawCode_.size() && std::isdigit(rawCode_[i_])) {
         buffer.push_back(rawCode_[i_++]);
     }
 
     lexemBuffer_.emplace_back(Asm4004::Integer{std::stoi(buffer)});
 };
 
-void Lexer::parseIdentOrLabel()
-{
+void Lexer::parseIdentOrLabel() {
 
     std::string buffer;
 
-    while (i_ < rawCode_.size() && std::isalnum(rawCode_[i_]))
-    {
+    while (i_ < rawCode_.size() && std::isalnum(rawCode_[i_])) {
         buffer.push_back(rawCode_[i_++]);
     }
 
-    if (i_ < rawCode_.size() && rawCode_[i_] == ':')
-    {
+    if (i_ < rawCode_.size() && rawCode_[i_] == ':') {
         i_++;
         lexemBuffer_.emplace_back(Asm4004::Label{buffer});
-    }
-    else
-    {
+    } else {
         lexemBuffer_.emplace_back(Asm4004::Identifier{buffer});
     }
 };
 
-void Lexer::skipComment()
-{
-    while (rawCode_[i_] != '\n')
-    {
+void Lexer::skipComment() {
+    while (rawCode_[i_] != '\n') {
         i_++;
     }
 };
