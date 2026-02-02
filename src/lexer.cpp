@@ -32,11 +32,6 @@ std::vector<Asm4004::Token> Lexer::tokenize() {
 
         default:
 
-            if (i_ <= rawCode_.size() && rawCode_[i_] == '0' && rawCode_[i_ + 1] == 'x') {
-                parseHex();
-                continue;
-            }
-
             if (std::isdigit(rawCode_[i_])) {
                 parseInteger();
                 continue;
@@ -53,18 +48,6 @@ std::vector<Asm4004::Token> Lexer::tokenize() {
     }
 
     return lexemBuffer_;
-};
-
-void Lexer::parseHex() {
-    std::string buffer;
-
-    i_ += 2; // Skip '0x'
-
-    while (i_ < rawCode_.size() && std::isxdigit(rawCode_[i_])) {
-        buffer.push_back(rawCode_[i_++]);
-    }
-
-    lexemBuffer_.emplace_back(Asm4004::HexadecimialInteger{std::stoi(buffer, nullptr, 16)});
 };
 
 void Lexer::parseInteger() {

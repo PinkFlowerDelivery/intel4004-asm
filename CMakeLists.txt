@@ -8,11 +8,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 
 FetchContent_Declare(
-  fmt
-  GIT_REPOSITORY https://github.com/fmtlib/fmt
-  GIT_TAG        12.1.0)
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt
+    GIT_TAG        12.1.0)
+FetchContent_MakeAvailable(fmt)
 
-add_executable(i4004asm src/main.cpp src/lexer.cpp src/tokens.cpp src/parser.cpp)
+if (MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+add_executable(i4004asm src/main.cpp src/lexer.cpp src/parser.cpp src/codegen.cpp)
 target_link_libraries(i4004asm fmt::fmt)
 
 # Tests
@@ -21,10 +28,10 @@ FetchContent_Declare(
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
 
-FetchContent_MakeAvailable(fmt googletest)
+FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-add_executable(lexer_tests tests/lexer/ident_test.cpp src/lexer.cpp src/tokens.cpp)
+add_executable(lexer_tests tests/lexer/ident_test.cpp src/lexer.cpp)
 
 target_include_directories(lexer_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(lexer_tests GTest::gtest_main fmt::fmt)

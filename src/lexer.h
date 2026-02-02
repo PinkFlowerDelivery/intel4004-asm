@@ -13,7 +13,6 @@ class Lexer {
   public:
     Lexer(std::string& rawCode) : rawCode_(rawCode) {};
     void parseInteger();
-    void parseHex();
     void parseIdentOrLabel();
     void skipComment();
     std::vector<Asm4004::Token> tokenize();

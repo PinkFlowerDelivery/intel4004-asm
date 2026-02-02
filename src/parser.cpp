@@ -11,7 +11,7 @@
 #include <variant>
 #include <vector>
 
-std::unordered_map<std::string, InstructionMeta> mapOfInstructionMeta = {
+std::unordered_map<std::string, InstructionMeta> instrMeta = {
     {"nop", {0, {}, 1}},         {"jun", {1, {LABEL}, 2}},    {"dec", {1, {REGISTER}, 1}},
     {"add", {1, {REGISTER}, 1}}, {"sub", {1, {REGISTER}, 1}}, {"ld", {1, {REGISTER}, 1}},
     {"xch", {1, {REGISTER}, 1}}, {"ldm", {1, {INTEGER}, 1}},  {"clc", {0, {}, 1}},
@@ -33,9 +33,9 @@ std::vector<Instruction> Parser::parse() {
 void Parser::parseInstruction(size_t& i) {
     Instruction rawInst;
     Asm4004::Identifier ident = std::get<Asm4004::Identifier>(lexems_[i]);
-    InstructionMeta instMeta = mapOfInstructionMeta[ident.name];
+    InstructionMeta instMeta = instrMeta[ident.name];
 
-    if (mapOfInstructionMeta.find(ident.name) == mapOfInstructionMeta.end()) {
+    if (instrMeta.find(ident.name) == instrMeta.end()) {
         throw std::runtime_error(fmt::format("Unexpected identifactor: {}", ident.name));
     }
 
@@ -56,11 +56,11 @@ void Parser::collectLabels() {
         }
         if (std::holds_alternative<Asm4004::Identifier>(lexems_[i])) {
             std::string identName = std::get<Asm4004::Identifier>(lexems_[i]).name;
-            if (mapOfInstructionMeta.find(identName) == mapOfInstructionMeta.end()) {
+            if (instrMeta.find(identName) == instrMeta.end()) {
                 throw std::runtime_error(fmt::format("Unexpected identifier: {}", identName));
             }
 
-            InstructionMeta meta = mapOfInstructionMeta[identName];
+            InstructionMeta meta = instrMeta[identName];
 
             i += meta.operandCount;
             pc += meta.byteSize;

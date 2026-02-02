@@ -23,7 +23,6 @@ struct InstructionMeta {
 extern std::unordered_map<std::string, InstructionMeta> mapOfInstuctionMeta;
 
 class Parser {
-  public:
     std::vector<Asm4004::Token> lexems_;
     std::vector<Instruction> instructions_;
     std::unordered_map<std::string, uint16_t> tableOfLabels_;
