@@ -63,7 +63,9 @@ void Lexer::parseIdentOrLabel() {
 
     std::string buffer;
 
-    while (i_ < rawCode_.size() && std::isalnum(rawCode_[i_])) {
+    auto isCorrectlyChar = [](char c) { return (std::isalnum(c) || c == '_'); };
+
+    while (i_ < rawCode_.size() && isCorrectlyChar(rawCode_[i_])) {
         buffer.push_back(rawCode_[i_++]);
     }
 

@@ -31,11 +31,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-add_executable(lexer_tests tests/lexer/ident_test.cpp src/lexer.cpp)
-
-target_include_directories(lexer_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(lexer_tests GTest::gtest_main fmt::fmt)
-
-include(GoogleTest)
-
-gtest_discover_tests(lexer_tests)
+add_subdirectory("tests/lexer")
+add_subdirectory("tests/parser")
+add_subdirectory("tests/codegen")

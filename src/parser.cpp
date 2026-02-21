@@ -11,11 +11,41 @@
 #include <variant>
 #include <vector>
 
-std::unordered_map<std::string, InstructionMeta> instrMeta = {
-    {"nop", {0, {}, 1}},         {"jun", {1, {LABEL}, 2}},    {"dec", {1, {REGISTER}, 1}},
-    {"add", {1, {REGISTER}, 1}}, {"sub", {1, {REGISTER}, 1}}, {"ld", {1, {REGISTER}, 1}},
-    {"xch", {1, {REGISTER}, 1}}, {"ldm", {1, {INTEGER}, 1}},  {"clc", {0, {}, 1}},
+std::unordered_map<std::string, InstructionMeta> tableInstrMeta = {
+    {"nop", {0, {}, 1}},
+    {"jcn", {2, {INTEGER, SLABEL}, 2}},
+    {"fim", {2, {REGISTER, INTEGER}, 2}},
+    {"fin", {1, {REGISTER}, 1}},
+    {"jin", {1, {REGISTER}, 1}},
+    {"jun", {1, {LABEL}, 2}},
+    {"jms", {1, {LABEL}, 2}},
+    {"inc", {1, {REGISTER}, 1}},
+    {"isz", {2, {REGISTER, SLABEL}, 2}},
+    {"add", {1, {REGISTER}, 1}},
+    {"sub", {1, {REGISTER}, 1}},
+    {"ld", {1, {REGISTER}, 1}},
+    {"xch", {1, {REGISTER}, 1}},
+    {"bbl", {1, {REGISTER}, 1}},
+    {"dec", {1, {REGISTER}, 1}},
+    {"ldm", {1, {INTEGER}, 1}},
+    {"clb", {0, {}, 1}},
+    {"clc", {0, {}, 1}},
+    {"iac", {0, {}, 1}},
+    {"cmc", {0, {}, 1}},
+    {"cma", {0, {}, 1}},
+    {"ral", {0, {}, 1}},
+    {"rar", {0, {}, 1}},
+    {"tcc", {0, {}, 1}},
+    {"dac", {0, {}, 1}},
+    {"tcs", {0, {}, 1}},
     {"stc", {0, {}, 1}},
+    {"daa", {0, {}, 1}},
+    {"kbp", {0, {}, 1}},
+    {"dcl", {0, {}, 1}},
+};
+
+bool Instruction::operator==(const Instruction& other) const {
+    return value == other.value && opcode == other.opcode;
 };
 
 std::vector<Instruction> Parser::parse() {
@@ -32,14 +62,15 @@ std::vector<Instruction> Parser::parse() {
 
 void Parser::parseInstruction(size_t& i) {
     Instruction rawInst;
-    Asm4004::Identifier ident = std::get<Asm4004::Identifier>(lexems_[i]);
-    InstructionMeta instMeta = instrMeta[ident.name];
+    std::string ident = std::get<Asm4004::Identifier>(lexems_[i]).name;
 
-    if (instrMeta.find(ident.name) == instrMeta.end()) {
-        throw std::runtime_error(fmt::format("Unexpected identifactor: {}", ident.name));
+    if (tableInstrMeta.find(ident) == tableInstrMeta.end()) {
+        throw std::runtime_error(fmt::format("Unexpected identifactor: {}", ident));
     }
 
-    rawInst.opcode = ident.name;
+    InstructionMeta instMeta = tableInstrMeta[ident];
+
+    rawInst.opcode = ident;
 
     parseInstructionArgs(i, rawInst, instMeta);
 
@@ -49,18 +80,21 @@ void Parser::parseInstruction(size_t& i) {
 void Parser::collectLabels() {
     size_t pc = 0;
     for (size_t i = 0; i < lexems_.size(); i++) {
+
         if (std::holds_alternative<Asm4004::Label>(lexems_[i])) {
             std::string labelName = std::get<Asm4004::Label>(lexems_[i]).name;
             tableOfLabels_[labelName] = pc;
             continue;
         }
+
         if (std::holds_alternative<Asm4004::Identifier>(lexems_[i])) {
             std::string identName = std::get<Asm4004::Identifier>(lexems_[i]).name;
-            if (instrMeta.find(identName) == instrMeta.end()) {
-                throw std::runtime_error(fmt::format("Unexpected identifier: {}", identName));
+
+            if (tableInstrMeta.find(identName) == tableInstrMeta.end()) {
+                continue;
             }
 
-            InstructionMeta meta = instrMeta[identName];
+            InstructionMeta meta = tableInstrMeta[identName];
 
             i += meta.operandCount;
             pc += meta.byteSize;
@@ -112,7 +146,27 @@ void Parser::parseInstructionArgs(size_t& i, Instruction& rawInstruction,
             continue;
         }
 
-        throw std::runtime_error(fmt::format("Unexpected arg"));
+        if (instructionMeta.operandTypes[j] == SLABEL &&
+            std::holds_alternative<Asm4004::Identifier>(lexems_[i])) {
+            std::string labelName = std::get<Asm4004::Identifier>(lexems_[i]).name;
+
+            if (tableOfLabels_.find(labelName) == tableOfLabels_.end()) {
+                throw std::runtime_error(fmt::format("Undefined label: {}", labelName));
+            }
+
+            uint16_t labelAddr = tableOfLabels_[labelName];
+
+            if (labelAddr > 255) {
+                throw std::runtime_error(
+                    fmt::format("Label {}: address too large for 8-bit field", labelName));
+            }
+
+            rawInstruction.value[j] = labelAddr;
+
+            continue;
+        }
+
+        throw std::invalid_argument(fmt::format("Unexpected arg"));
     }
 };
 

@@ -11,9 +11,11 @@
 struct Instruction {
     std::array<uint8_t, 2> value = {0};
     std::string opcode;
+
+    bool operator==(const Instruction& other) const;
 };
 
-enum OperandType { INTEGER, REGISTER, LABEL };
+enum OperandType { INTEGER, REGISTER, LABEL, SLABEL };
 struct InstructionMeta {
     uint8_t operandCount;
     std::array<OperandType, 2> operandTypes;

@@ -8,7 +8,7 @@
 class Lexer {
     std::string rawCode_;
     std::vector<Asm4004::Token> lexemBuffer_;
-    ssize_t i_ = 0;
+    size_t i_ = 0;
 
   public:
     Lexer(std::string& rawCode) : rawCode_(rawCode) {};
