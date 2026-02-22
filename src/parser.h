@@ -30,7 +30,7 @@ class Parser {
     std::unordered_map<std::string, uint16_t> tableOfLabels_;
 
     static uint8_t registerToNumber(const std::string& reg);
-    void parseInstruction(size_t& i);
+    void parseInstruction();
     void parseInstructionArgs(size_t& i, Instruction& rawInstruction,
                               InstructionMeta& instructionMeta);
     void collectLabels();

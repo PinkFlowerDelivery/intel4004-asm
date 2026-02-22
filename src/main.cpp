@@ -56,10 +56,6 @@ int main(int32_t argc, char* argv[]) {
     Codegen codegen(instructions);
     std::vector<uint8_t> outCode = codegen.generate();
 
-    for (auto d : outCode) {
-        fmt::print("{:x} ", d);
-    }
-
     std::ofstream out(output, std::ios::binary);
     out.write(reinterpret_cast<const char*>(outCode.data()), outCode.size());
     out.close();

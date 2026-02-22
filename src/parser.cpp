@@ -51,30 +51,31 @@ bool Instruction::operator==(const Instruction& other) const {
 std::vector<Instruction> Parser::parse() {
     collectLabels();
 
-    for (size_t i = 0; i < lexems_.size(); i++) {
-        if (std::holds_alternative<Asm4004::Identifier>(lexems_[i])) {
-            parseInstruction(i);
-        }
-    }
+    parseInstruction();
 
     return instructions_;
 }
 
-void Parser::parseInstruction(size_t& i) {
-    Instruction rawInst;
-    std::string ident = std::get<Asm4004::Identifier>(lexems_[i]).name;
+void Parser::parseInstruction() {
 
-    if (tableInstrMeta.find(ident) == tableInstrMeta.end()) {
-        throw std::runtime_error(fmt::format("Unexpected identifactor: {}", ident));
+    for (size_t i = 0; i < lexems_.size(); i++) {
+        if (std::holds_alternative<Asm4004::Identifier>(lexems_[i])) {
+            Instruction rawInst;
+            std::string ident = std::get<Asm4004::Identifier>(lexems_[i]).name;
+
+            if (tableInstrMeta.find(ident) == tableInstrMeta.end()) {
+                throw std::runtime_error(fmt::format("Unexpected identifactor: {}", ident));
+            }
+
+            InstructionMeta instMeta = tableInstrMeta[ident];
+
+            rawInst.opcode = ident;
+
+            parseInstructionArgs(i, rawInst, instMeta);
+
+            instructions_.push_back(rawInst);
+        }
     }
-
-    InstructionMeta instMeta = tableInstrMeta[ident];
-
-    rawInst.opcode = ident;
-
-    parseInstructionArgs(i, rawInst, instMeta);
-
-    instructions_.push_back(rawInst);
 };
 
 void Parser::collectLabels() {
