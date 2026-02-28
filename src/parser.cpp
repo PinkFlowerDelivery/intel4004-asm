@@ -42,7 +42,8 @@ std::unordered_map<std::string, InstructionMeta> tableInstrMeta = {
     {"daa", {0, {}, 1}},
     {"kbp", {0, {}, 1}},
     {"dcl", {0, {}, 1}},
-};
+    // Custom instruction
+    {"store", {2, {REGISTER, INTEGER}, 2}}};
 
 bool Instruction::operator==(const Instruction& other) const {
     return value == other.value && opcode == other.opcode;

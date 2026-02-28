@@ -17,7 +17,7 @@ extern std::unordered_map<std::string, opcodeInfo> opcodeTable;
 
 class Codegen {
     std::vector<Instruction> instArray_;
-    std::vector<uint8_t> code_ = {};
+    std::vector<uint8_t> code_;
 
   public:
     Codegen(std::vector<Instruction> instArray) : instArray_(std::move(instArray)) {}
