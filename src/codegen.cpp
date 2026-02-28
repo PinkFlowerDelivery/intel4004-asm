@@ -12,7 +12,7 @@ std::unordered_map<std::string, opcodeInfo> opcodeTable = {
     {"cmc", {0xF3, false, 0}}, {"cma", {0xF4, false, 0}}, {"ral", {0xF5, false, 0}},
     {"rar", {0xF6, false, 0}}, {"tcc", {0xF7, false, 0}}, {"dac", {0xF8, false, 0}},
     {"tcs", {0xF9, false, 0}}, {"stc", {0xFA, false, 0}}, {"daa", {0xFB, false, 0}},
-    {"kbp", {0xFC, false, 0}}, {"dcl", {0xFD, false, 0}}, {"store", {0xFE, false, 2}}};
+    {"kbp", {0xFC, false, 0}}, {"dcl", {0xFD, false, 0}}, {"store", {0xE, false, 2}}};
 
 std::vector<uint8_t> Codegen::generate() {
     code_.clear();
