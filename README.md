@@ -1,4 +1,4 @@
-# intel4004-asm (In progress)
+# intel4004-asm
 The assembler for my intel 4004 emulator. [Emulator repo](https://github.com/PinkFlowerDelivery/intel4004-emulator)
 
 ## How to build 
@@ -13,8 +13,8 @@ cmake --build build
 ```
 
 ## Custom instructions
-**store** - [register pair; 8-bit address]  
-Stores the value from the specified register pair into ROM at the given 8-bit address.  
+**store** (0xE) - [register; 8-bit address]
+Stores the value from the specified register into ROM at the given 8-bit address.
 Used by the FIM and FIN instructions.
 
 ## Usage example 

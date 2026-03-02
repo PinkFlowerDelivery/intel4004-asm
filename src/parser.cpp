@@ -40,8 +40,6 @@ std::unordered_map<std::string, InstructionMeta> tableInstrMeta = {
     {"tcs", {0, {}, 1}},
     {"stc", {0, {}, 1}},
     {"daa", {0, {}, 1}},
-    {"kbp", {0, {}, 1}},
-    {"dcl", {0, {}, 1}},
     // Custom instruction
     {"store", {2, {REGISTER, INTEGER}, 2}}};
 

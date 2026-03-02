@@ -1,0 +1,2 @@
+main: nop; 
+jun main;
